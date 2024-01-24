@@ -14,7 +14,7 @@ class FileService {
             const extension = file.name.split(".")[size-1];
 
             if (!allowedExtensions.includes(extension)) {
-                return { message: "Extensão de arquivo inválida", status: 415 };
+                throw new ServerException("Extensão inválida", 415);
             }
 
             const bytes = await file.arrayBuffer();
@@ -25,7 +25,7 @@ class FileService {
 
             return { message: "Arquivo salvo", status: 201 };
         } else {
-            return { message: "Nenhum arquivo enviado", status: 400 };
+            throw new ServerException("Nenhum arquivo enviado", 400);
         }
     }
 
