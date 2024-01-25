@@ -1,5 +1,6 @@
 const multer = require("multer");
 const allowedExtensions = require("../utils/allowedExtensions");
+const ServerException = require("../utils/ServerException");
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -17,7 +18,8 @@ const filter = (req, file, cb) => {
     if (allowedExtensions.includes(extension)) {
         cb(null, true);
     } else {
-        cb("error", false);
+        cb(null, false);
+        return cb(new ServerException("Extensão inválida", 415));
     }
 }
 

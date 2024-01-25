@@ -5,3 +5,5 @@ class ServerException extends Error {
         this.status = status;
     }
 }
+
+module.exports = ServerException;

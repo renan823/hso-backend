@@ -1,34 +1,11 @@
+const ServerException = require("../utils/ServerException");
 const allowedExtensions = require("../utils/allowedExtensions");
 const { readdir, writeFile } = require("fs/promises");
+
 
 const path = "./uploads/";
 
 class FileService {
-
-    static async upload (file) {
-
-        if (file) {
-            const filename = new Date().toISOString().split(".")[0];
-
-            let size = file.name.split(".").length;
-            const extension = file.name.split(".")[size-1];
-
-            if (!allowedExtensions.includes(extension)) {
-                throw new ServerException("Extensão inválida", 415);
-            }
-
-            const bytes = await file.arrayBuffer();
-
-            const buffer = Buffer.from(bytes);
-
-            await writeFile(`${path}${filename}.${extension}`, buffer);
-
-            return { message: "Arquivo salvo", status: 201 };
-        } else {
-            throw new ServerException("Nenhum arquivo enviado", 400);
-        }
-    }
-
     static async delete () {
         return;
     }
@@ -47,9 +24,9 @@ class FileService {
                 sortedByDay.hasOwnProperty(date) ?  sortedByDay[date] += 1 : sortedByDay[date] = 1;
             })
 
-            return { files: sortedByDay, amount: files.length, status: 200 };
+            return { files: sortedByDay, amount: files.length };
         } catch (error) {
-            return { message: "Erro na leitura dos arquivos", status: 500 };
+            throw new ServerException("Erro na leitura dos arquivos");
         }
     }
 
@@ -57,9 +34,9 @@ class FileService {
         try {
             const files = await readdir(path);
 
-            return { files, status: 200 };
+            return { files };
         } catch (error) {
-            return { message: "Erro na leitura dos arquivos", status: 500 };
+            throw new ServerException("Erro na leitura dos arquivos");
         }
     }
 }
