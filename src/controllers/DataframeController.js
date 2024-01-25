@@ -34,13 +34,37 @@ router.post("/alter", async (req, res, next) => {
     }
 
     try {
-        let dataframe = await DataframeService.dropColumns(filename, [...columns]);
+        let dataframe = await DataframeService.dropColumns(filename, columns);
 
         await DataframeService.save(filename, dataframe);
 
         dataframe = toJSON(dataframe.head(10));
 
-        return res.json({ dataframe, filename, rows });
+        return res.json({ dataframe, filename });
+    } catch (error) {
+        return next(error);
+    }
+})
+
+router.post("/filter", async (req, res, next) => {
+    const { filename, filter } = req.body;
+
+    if (!filename) {
+        return next(new ServerException("Nenhum arquivo selecionado", 400));
+    }
+
+    console.log("hadcs")
+
+    //filter { target: newValue, target: newValue }
+
+    try {
+        let dataframe = await DataframeService.applyFilter(filename, filter);
+
+        await DataframeService.save(filename, dataframe);
+
+        dataframe = toJSON(dataframe.head(10));
+
+        return res.json({ dataframe, filename });
     } catch (error) {
         return next(error);
     }

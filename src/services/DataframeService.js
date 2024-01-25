@@ -12,7 +12,12 @@ class DataframeService {
             throw new ServerException("Erro na leitura do arquivo", 500);
         }
 
-        dataframe = dataframe.applyMap((x) => `${x}`.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/gi, ''))
+        dataframe = dataframe.applyMap((x) => {
+            if (x === null || x === "null") {
+                return "";
+            }
+            return `${x}`.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/gi, '')
+        })
 
         let columns = dataframe.columns.map((column) => `${column}`.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/gi, ''))
 
@@ -34,18 +39,40 @@ class DataframeService {
     }
 
     static async dropColumns (filename, columns) {
+
         try {
-            let dataframe = await readCSV(`${path}${filename}`);
+            let dataframe = await this.create(filename)
 
             if (!typeof dataframe instanceof DataFrame) {
                 throw new ServerException("Erro na leitura do arquivo", 500);
             }
-
-            dataframe = dataframe.drop({ columns });
+           
+            columns.forEach((column) => {
+                if (dataframe.columns.includes(column)) {
+                    dataframe = dataframe.drop({ columns: [column] });
+                }
+            })
 
             return dataframe;
         } catch (error) {
-            throw new ServerException("Erro ao salterar o Dataframe", 500);
+            throw new ServerException("Erro ao alterar o Dataframe", 500);
+        }
+    }
+
+    static async applyFilter (filename, filter) {
+        let dataframe = await this.create(filename)
+
+        try {
+            dataframe = dataframe.applyMap((item) => { 
+                if (filter.hasOwnProperty(`${item}`)) {
+                    return filter[`${item}`];
+                } 
+                return item;
+            });
+        
+            return dataframe;
+        } catch (error) {
+            throw new ServerException("Erro na aplicação do filtro", 500);
         }
     }
 }

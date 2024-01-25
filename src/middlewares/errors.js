@@ -1,4 +1,3 @@
 module.exports = (error, req, res, next) => {
-    console.log("erro")
-    return res.status(error.status).json({ error: error.message });
+    return res.status(error.status || 500).json({ error: error.message || "Algo deu errado" });
 }
