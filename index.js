@@ -7,4 +7,6 @@ app.use(express.json());
 app.use("/api/files", require("./src/controllers/FileController"));
 app.use("/api/dataframes", require("./src/controllers/DataframeController"));
 
+app.use(require("./src/middlewares/errors"))
+
 app.listen(5000, () => console.log("ready"))

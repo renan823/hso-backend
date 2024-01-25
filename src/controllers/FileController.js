@@ -4,24 +4,32 @@ const ServerException = require("../utils/ServerException");
 
 const router = require("express").Router();
 
-router.post("/upload", upload.single("file"), async (req, res) => {
+router.post("/upload", upload.single("file"), async (req, res, next) => {
     if (!req.file) {
-        throw new ServerException("Nenhum arquivo enviado", 400);
+        return next(new ServerException("Nenhum arquivo enviado", 400));
     }
 
     return res.status(201).json({ message: "Arquivo salvo" });
 })
 
 router.get("/count", async (req, res) => {
-    const { files, amount } = await FileService.count();
+    try {
+        const { files, amount } = await FileService.count();
 
-    return res.status(200).json({ files, amount });
+        return res.status(200).json({ files, amount });
+    } catch (error) {
+        return next(error);
+    }
 })
 
 router.get("/", async (req, res) => {
-    const files = await FileService.fetchAll();
+    try {
+        const files = await FileService.fetchAll();
 
-    return res.status(200).json(files);
+        return res.status(200).json(files);
+    } catch (error) {
+        return next(error);
+    }
 })
 
 module.exports = router;

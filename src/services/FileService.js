@@ -2,7 +2,6 @@ const ServerException = require("../utils/ServerException");
 const allowedExtensions = require("../utils/allowedExtensions");
 const { readdir, writeFile } = require("fs/promises");
 
-
 const path = "./uploads/";
 
 class FileService {
