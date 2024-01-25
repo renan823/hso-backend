@@ -75,6 +75,19 @@ class DataframeService {
             throw new ServerException("Erro na aplicação do filtro", 500);
         }
     }
+
+    static async joinColumns (filename) {
+        let dataframe = await this.create(filename);
+
+        dataframe.head().print()
+
+        try {
+            dataframe.apply((row) => console.log(row));
+            return dataframe;
+        } catch (error) {
+            throw new ServerException("Erro na junção de colunas", 500);
+        }
+    }
 }
 
 module.exports = DataframeService;

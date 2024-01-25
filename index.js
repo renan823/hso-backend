@@ -6,6 +6,7 @@ app.use(express.json());
 
 app.use("/api/files", require("./src/controllers/FileController"));
 app.use("/api/dataframes", require("./src/controllers/DataframeController"));
+app.use("/api/thesaurus", require("./src/controllers/ThesaurusController"));
 
 app.use(require("./src/middlewares/errors"))
 
