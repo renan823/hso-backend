@@ -6,6 +6,10 @@ const path = "./uploads/";
 
 class DataframeService {
     static async create (filename) {
+        if (!filename) {
+            throw new ServerException("Erro na leitura do arquivo", 500);
+        }
+
         let dataframe = await readCSV(`${path}${filename}`);
             
         if (!typeof dataframe instanceof DataFrame) {
@@ -77,12 +81,18 @@ class DataframeService {
     }
 
     static async joinColumns (filename) {
+        console.log("oi")
         let dataframe = await this.create(filename);
 
         dataframe.head().print()
 
         try {
-            dataframe.apply((row) => console.log(row));
+            dataframe.apply((row) => {
+                row = row.filter(value => value != "");
+                console.log(row)
+                return row
+            }, { axis: 1 })
+            
             return dataframe;
         } catch (error) {
             throw new ServerException("Erro na junção de colunas", 500);

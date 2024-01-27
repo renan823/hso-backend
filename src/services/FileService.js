@@ -38,6 +38,8 @@ class FileService {
             throw new ServerException("Erro na leitura dos arquivos");
         }
     }
+
+    static extensions = allowedExtensions;
 }
 
 module.exports = FileService;

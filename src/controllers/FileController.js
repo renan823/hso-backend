@@ -32,4 +32,10 @@ router.get("/", async (req, res) => {
     }
 })
 
+router.get("/extensions", (req, res) => {
+    const extensions = FileService.extensions;
+
+    return res.status(200).json(extensions);
+})
+
 module.exports = router;
