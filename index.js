@@ -1,8 +1,11 @@
 const express = require("express");
 const app = express();
+const cors = require("cors")
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+app.use(cors({ origin: "*" }))
 
 app.use("/api/files", require("./src/controllers/FileController"));
 app.use("/api/dataframes", require("./src/controllers/DataframeController"));

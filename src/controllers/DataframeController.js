@@ -14,7 +14,7 @@ router.get("/:filename", async (req, res, next) => {
     try {
         let dataframe = await DataframeService.create(filename);
 
-        const rows = dataframe.shape[0]
+        const rows = dataframe.shape[0];
 
         await DataframeService.save(filename, dataframe);
 
@@ -28,6 +28,8 @@ router.get("/:filename", async (req, res, next) => {
 
 router.post("/alter", async (req, res, next) => {
     const { filename, columns } = req.body;
+
+    console.log(req.body)
 
     if (!filename) {
         return next(new ServerException("Nenhum arquivo selecionado", 400));

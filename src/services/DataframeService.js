@@ -98,6 +98,24 @@ class DataframeService {
             throw new ServerException("Erro na junção de colunas", 500);
         }
     }
+
+    static sample (dataframe, amount) {
+        const rows = [];
+        const index = [];
+
+        while (index.length <= amount) {
+            let target = Math.floor(Math.random() * dataframe.shape[0])
+
+            if (!index.includes(target)) {
+                index.push(target);
+                let df = dataframe.iloc({ rows: [target] })
+                console.log(target, df)
+                rows.push(dataframe.iloc({ rows: [target] }))
+            }
+        }
+        dataframe.iloc()
+        return rows;
+    }
 }
 
 module.exports = DataframeService;
