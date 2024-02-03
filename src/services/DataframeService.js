@@ -81,17 +81,13 @@ class DataframeService {
     }
 
     static async joinColumns (filename) {
-        console.log("oi")
         let dataframe = await this.create(filename);
 
-        dataframe.head().print()
-
+        
         try {
-            dataframe.apply((row) => {
-                row = row.filter(value => value != "");
-                console.log(row)
-                return row
-            }, { axis: 1 })
+            const rows = dataframe.values;
+
+            rows.forEach(row => console.log(row))
             
             return dataframe;
         } catch (error) {

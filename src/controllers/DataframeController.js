@@ -55,8 +55,6 @@ router.post("/filter", async (req, res, next) => {
         return next(new ServerException("Nenhum arquivo selecionado", 400));
     }
 
-    console.log("hadcs")
-
     //filter { target: newValue, target: newValue }
 
     try {
