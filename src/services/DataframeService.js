@@ -27,6 +27,16 @@ class DataframeService {
 
         dataframe.$setColumnNames(columns);
 
+        const toDrop = [];
+
+        dataframe.values.forEach((row, index) => {
+            if (row.every((item) => item === "") || row === []) {
+                toDrop.push(index);
+            }
+        })
+
+        dataframe = dataframe.drop({ index: toDrop });
+
         return dataframe;
     }
 
@@ -77,21 +87,6 @@ class DataframeService {
             return dataframe;
         } catch (error) {
             throw new ServerException("Erro na aplicação do filtro", 500);
-        }
-    }
-
-    static async joinColumns (filename) {
-        let dataframe = await this.create(filename);
-
-        
-        try {
-            const rows = dataframe.values;
-
-            rows.forEach(row => console.log(row))
-            
-            return dataframe;
-        } catch (error) {
-            throw new ServerException("Erro na junção de colunas", 500);
         }
     }
 

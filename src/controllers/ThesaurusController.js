@@ -1,15 +1,22 @@
+const DataframeService = require("../services/DataframeService");
 const ThesaurusService = require("../services/ThesaurusService");
+const Thesaurus = require("../utils/Thesaurus");
 
 const router = require("express").Router();
 
 router.post("/fill", async (req, res, next) => {
     const { filename } = req.body;
 
-    await ThesaurusService.fill(filename);
+    const thesaurus = new Thesaurus();
 
-    //pegar o arquivo
-    //ler o arquivo
-    //juntar colunas na coluna target
+    const dataframe = await DataframeService.create(filename);
+
+    if (!dataframe) {
+        return res.json("bad")
+    }
+
+    thesaurus.fill(dataframe);
+
     return res.json("ok");
 })
 
