@@ -12,7 +12,7 @@ router.post("/upload", upload.single("file"), async (req, res, next) => {
     return res.status(201).json({ message: "Arquivo salvo" });
 })
 
-router.get("/count", async (req, res) => {
+router.get("/count", async (req, res, next) => {
     try {
         const { files, amount } = await FileService.count();
 
@@ -22,7 +22,7 @@ router.get("/count", async (req, res) => {
     }
 })
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
     try {
         const files = await FileService.fetchAll();
 

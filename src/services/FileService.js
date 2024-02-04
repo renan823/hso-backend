@@ -13,17 +13,36 @@ class FileService {
         try {
             const files = await readdir(path);
 
+            let dates = [];
+
             const sortedByDay = {};
 
             files.forEach((file) => {
                 const [year, month, day] = file.split("T")[0].split("-");
 
-                const date = `${day}/${month}/${year}`;
+                let date = `${day}/${month}/${year}`;
+
+                if (!dates.includes(date)) {
+                    dates.push(date);
+                }
 
                 sortedByDay.hasOwnProperty(date) ?  sortedByDay[date] += 1 : sortedByDay[date] = 1;
             })
 
-            return { files: sortedByDay, amount: files.length };
+            const lastTenDays = {};
+
+            dates = dates.reverse();
+            
+            for (let i = 0; i <= 10; i++) {
+                if (i >= dates.length) {
+                    break;
+                }
+
+                let date = dates[i];
+                lastTenDays[date] = sortedByDay[date];
+            }
+
+            return { files: lastTenDays, amount: files.length };
         } catch (error) {
             throw new ServerException("Erro na leitura dos arquivos");
         }
