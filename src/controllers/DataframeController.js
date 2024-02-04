@@ -40,6 +40,8 @@ router.post("/alter", async (req, res, next) => {
 
         await DataframeService.save(filename, dataframe);
 
+        dataframe.head().print()
+
         dataframe = toJSON(dataframe.head(10));
 
         return res.json({ dataframe, filename });
